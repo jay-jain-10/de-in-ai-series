@@ -1,0 +1,47 @@
+version: 2
+
+sources:
+  - name: raw
+    database: "{{ env_var('SNOWFLAKE_DATABASE', 'ANALYTICS') }}"
+    schema: RAW
+    tables:
+      - name: support_ticket_classifications
+        description: "AI-classified support tickets from Claude Haiku pipeline"
+        columns:
+          - name: ticket_id
+            description: "Unique ticket identifier"
+            tests:
+              - not_null
+              - unique
+          - name: sentiment
+            description: "AI-classified sentiment"
+            tests:
+              - accepted_values:
+                  values: ['positive', 'negative', 'neutral', 'frustrated']
+          - name: category
+            description: "AI-classified category"
+            tests:
+              - accepted_values:
+                  values: ['billing', 'technical', 'account', 'product', 'general', 'compliance']
+          - name: escalation_risk
+            description: "AI-classified escalation risk level"
+            tests:
+              - accepted_values:
+                  values: ['low', 'medium', 'high', 'critical']
+          - name: confidence
+            description: "AI classification confidence score (0.0 = fallback)"
+            tests:
+              - not_null
+
+models:
+  - name: stg_ticket_classifications
+    description: "Staged ticket classifications with review flags"
+    columns:
+      - name: ticket_id
+        tests:
+          - not_null
+          - unique
+      - name: needs_review
+        description: "True if confidence < 0.7"
+      - name: is_fallback
+        description: "True if confidence = 0.0 (AI stage failed)"
