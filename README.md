@@ -25,7 +25,7 @@ The data engineering landscape has shifted. AI models like Claude are no longer 
 
 ## Target Audience
 
-Mid-level data engineers (2–5 years experience) who want to integrate AI into their pipelines — not as a side project, but as a first-class component alongside dbt, Airflow, and Snowflake.
+Mid-level to experience data engineers (2–8 years experience) who want to integrate AI into their pipelines — not as a side project, but as a first-class component alongside dbt, Airflow, and Snowflake.
 
 ## Tech Stack
 
