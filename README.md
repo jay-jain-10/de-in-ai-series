@@ -2,45 +2,39 @@
 
 **Building Real-World AI Pipelines for the Modern Data Engineer**
 
-An 8-part Medium article series with production-ready code for every project.
+An 8-part Medium series exploring how AI is reshaping data engineering — from architecture patterns to platform thinking. Each article covers the *why* and *when*; the code here covers the *how*.
 
 ---
 
-## Series Overview
+## The Series
 
-The data engineering landscape has shifted. AI models like Claude are no longer edge experiments — they're core pipeline components. This series teaches mid-level data engineers how to design, build, and deploy AI-native data pipelines through hands-on projects.
+| # | Article | Architectural Focus | Code |
+|---|---------|-------------------|------|
+| 1 | **The AI-Native Data Pipeline** | Why the transformation layer is being rewritten | [article-01](./article-01-ai-native-pipeline/) |
+| 2 | **The Unstructured Data Problem at Enterprise Scale** | Document intelligence as system design | *coming soon* |
+| 3 | **Prompt Governance Is the New Schema Governance** | Prompts as production infrastructure | *coming soon* |
+| 4 | **Designing for Model Heterogeneity** | Router, chain, fan-out, and fallback patterns | *coming soon* |
+| 5 | **Where AI Meets Event-Driven Architecture** | Latency budgets and streaming trade-offs | *coming soon* |
+| 6 | **The Semantic Data Quality Layer** | Why rule-based DQ plateaus at 60% | *coming soon* |
+| 7 | **FinOps for AI Pipelines** | Unit economics that ship or kill your project | *coming soon* |
+| 8 | **From Pipeline to Platform** | Building an AI data platform for your org | *coming soon* |
 
-## Articles
+## Who This Is For
 
-| # | Title | Focus | Code |
-|---|-------|-------|------|
-| 1 | **The AI-Native Data Pipeline** | AI as a transformation stage in ETL | [article-01](./article-01-ai-native-pipeline/) |
-| 2 | **Structured Data Extraction at Scale** | PDF → structured tables with Claude | *coming soon* |
-| 3 | **Prompt Engineering Is the New SQL** | Version-controlled, testable prompts | *coming soon* |
-| 4 | **Multi-Model Orchestration Patterns** | Haiku/Sonnet/Opus routing & fallbacks | *coming soon* |
-| 5 | **Real-Time AI Streams** | Kafka + Claude for streaming anomaly detection | *coming soon* |
-| 6 | **AI-Powered Data Quality** | Semantic validation beyond rule-based checks | *coming soon* |
-| 7 | **Cost Engineering for AI Pipelines** | Cutting API costs by 90% | *coming soon* |
-| 8 | **Capstone: End-to-End AI Data Platform** | Insurance claims processing pipeline | *coming soon* |
-
-## Target Audience
-
-Mid-level to experience data engineers (2–8 years experience) who want to integrate AI into their pipelines — not as a side project, but as a first-class component alongside dbt, Airflow, and Snowflake.
+Mid-to-senior data engineers (2-5+ years) who want to integrate AI into their pipelines at an architectural level — not just call an API, but design systems that handle failure, cost, governance, and scale.
 
 ## Tech Stack
 
-- **AI:** Claude API (Haiku, Sonnet, Opus), Anthropic Python SDK
+- **AI:** Claude API (Haiku / Sonnet / Opus), Anthropic Python SDK
 - **Orchestration:** Apache Airflow, Dagster
 - **Warehouse:** Snowflake
 - **Transformation:** dbt
 - **Storage:** AWS S3, Redis
-- **Streaming:** Kafka/Confluent
+- **Streaming:** Kafka / Confluent
 - **Quality:** Great Expectations, Pydantic
 - **Language:** Python 3.10+
 
 ## Getting Started
-
-Each article directory is a standalone project with its own README, requirements, and `.env.example`.
 
 ```bash
 cd article-01-ai-native-pipeline
