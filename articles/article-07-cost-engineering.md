@@ -414,6 +414,10 @@ Or the alternative is a vendor solution. Software-as-a-service platforms that do
 
 These comparisons are powerful. They shift the conversation from "is this expensive?" to "what's the alternative?" Almost always, the alternative is more expensive.
 
+## When NOT to Use These Techniques
+
+Not every optimization is worth implementing. Skip aggressive cost engineering when you're in prototype or proof-of-concept phase—optimizing costs before validating that the pipeline produces business value is premature. If your total AI spend is under five hundred dollars per month, the engineering effort to build caching layers, tiered routing, and monitoring dashboards costs more than the savings. Similarly, don't implement model tiering if your use case requires consistent quality across all inputs—routing some requests to cheaper models introduces quality variance that regulated industries (healthcare, finance) may not tolerate. Prompt optimization is risky when your prompts are already at minimum viable length—cutting tokens further degrades output quality, and the savings rarely justify the accuracy loss. Finally, avoid building custom FinOps infrastructure if your cloud provider's native cost tools (AWS Cost Explorer, GCP Billing dashboards) give you sufficient visibility. Build custom only when you need per-record cost attribution that native tools can't provide.
+
 ## Skills You've Developed
 
 By thinking about AI pipelines through a FinOps lens, you've learned to approach technology like a senior architect who understands business. You understand that cost matters as much as capability. You understand unit economics and how to calculate them. You can make the business case for AI infrastructure to skeptical leadership. You understand when optimization is worth the engineering effort and when it's not.
