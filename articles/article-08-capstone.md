@@ -423,10 +423,10 @@ This is data engineering in the age of AI. It's the most interesting time to be 
 
 **GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
 
+**What this article covers:** Building an AI data platform for insurance claims with AI Gateway, shared services, and organizational patterns to move from scattered pipelines to a self-service platform used by multiple teams.
+
 **What's in the repo:**
-- `articles/` — All 8 articles in this series as markdown files, including architecture diagrams, cost breakdowns, and trade-off analyses
-- Each article is self-contained with AWS/GCP service recommendations, DE fundamentals sections, and worked examples you can adapt to your own pipelines
+- `articles/` — All 8 articles in this series as markdown, each with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections
+- `README.md` — Series overview with a summary table showing what problem each article solves and the key architecture pattern
 
-**How to use this series:** Read the articles in order (each builds on concepts from the previous one), then use the architecture diagrams and cost models as starting points for your own AI pipeline designs. Fork the repo and customize the patterns for your specific cloud environment.
-
-*Part 8 of "Data Engineering in the Age of AI" — Series Conclusion*
+**Series reading order:** This is Part 8 of 8 (capstone). Articles 1-7 built individual pipeline patterns (transformation, extraction, governance, orchestration, streaming, quality, costs). This article unifies them into a reusable enterprise platform. Read the full series overview in the [README](https://github.com/jay-jain-10/de-in-ai-series).

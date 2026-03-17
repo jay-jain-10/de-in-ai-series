@@ -517,8 +517,10 @@ That's Part 4: Designing for Model Heterogeneity.
 
 **GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
 
-**What's in the repo:**
-- `articles/` — All 8 articles in this series as markdown files, including architecture diagrams, cost breakdowns, and trade-off analyses
-- Each article is self-contained with AWS/GCP service recommendations, DE fundamentals sections, and worked examples you can adapt to your own pipelines
+**What this article covers:** Prompt governance as schema governance — treating prompts as versioned production code with Git-based registries, golden dataset testing, CI/CD checks, and automated rollback for multi-pipeline systems.
 
-**How to use this series:** Read the articles in order (each builds on concepts from the previous one), then use the architecture diagrams and cost models as starting points for your own AI pipeline designs. Fork the repo and customize the patterns for your specific cloud environment.
+**What's in the repo:**
+- `articles/` — All 8 articles in this series as markdown, each with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections
+- `README.md` — Series overview with a summary table showing what problem each article solves and the key architecture pattern
+
+**Series reading order:** This is Part 3 of 8. Article 2 showed extraction pipelines that depend on prompts drifting silently. This article tackles prompt governance with versioning and testing. Next: Article 4 tackles multi-model orchestration with Router, Chain, Fan-Out, and Fallback patterns. Read the full series overview in the [README](https://github.com/jay-jain-10/de-in-ai-series).

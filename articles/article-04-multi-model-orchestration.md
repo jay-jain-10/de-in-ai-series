@@ -524,8 +524,10 @@ That's coming in Part 5: Real-Time AI Streams.
 
 **GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
 
-**What's in the repo:**
-- `articles/` — All 8 articles in this series as markdown files, including architecture diagrams, cost breakdowns, and trade-off analyses
-- Each article is self-contained with AWS/GCP service recommendations, DE fundamentals sections, and worked examples you can adapt to your own pipelines
+**What this article covers:** Four orchestration patterns (Router, Chain, Fan-Out/Fan-In, Fallback Cascade) for routing tasks to different models based on complexity and cost, processing 100K product reviews/day at ~$190/month.
 
-**How to use this series:** Read the articles in order (each builds on concepts from the previous one), then use the architecture diagrams and cost models as starting points for your own AI pipeline designs. Fork the repo and customize the patterns for your specific cloud environment.
+**What's in the repo:**
+- `articles/` — All 8 articles in this series as markdown, each with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections
+- `README.md` — Series overview with a summary table showing what problem each article solves and the key architecture pattern
+
+**Series reading order:** This is Part 4 of 8. Article 3 governed individual prompts. This article orchestrates multiple models in batch. Next: Article 5 brings AI into real-time streaming with latency budgets and hybrid architectures. Read the full series overview in the [README](https://github.com/jay-jain-10/de-in-ai-series).

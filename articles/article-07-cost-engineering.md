@@ -446,10 +446,10 @@ That's when you need to think like a platform architect. When to build versus bu
 
 **GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
 
+**What this article covers:** Four compounding cost levers (caching, model tiering, prompt optimization, batching) that reduce a $47K/month pipeline to $5K while maintaining quality, with FinOps frameworks for cost governance.
+
 **What's in the repo:**
-- `articles/` — All 8 articles in this series as markdown files, including architecture diagrams, cost breakdowns, and trade-off analyses
-- Each article is self-contained with AWS/GCP service recommendations, DE fundamentals sections, and worked examples you can adapt to your own pipelines
+- `articles/` — All 8 articles in this series as markdown, each with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections
+- `README.md` — Series overview with a summary table showing what problem each article solves and the key architecture pattern
 
-**How to use this series:** Read the articles in order (each builds on concepts from the previous one), then use the architecture diagrams and cost models as starting points for your own AI pipeline designs. Fork the repo and customize the patterns for your specific cloud environment.
-
-*Part 7 of "Data Engineering in the Age of AI"*
+**Series reading order:** This is Part 7 of 8. Article 6 validated data quality. This article optimizes costs using caching, tiering, and batching. Next: Article 8 brings everything together into a shared platform architecture. Read the full series overview in the [README](https://github.com/jay-jain-10/de-in-ai-series).

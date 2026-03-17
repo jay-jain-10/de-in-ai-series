@@ -448,8 +448,10 @@ That's Part 3: Prompt Governance Is the New Schema Governance.
 
 **GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
 
-**What's in the repo:**
-- `articles/` — All 8 articles in this series as markdown files, including architecture diagrams, cost breakdowns, and trade-off analyses
-- Each article is self-contained with AWS/GCP service recommendations, DE fundamentals sections, and worked examples you can adapt to your own pipelines
+**What this article covers:** A six-stage extraction pipeline (format detection, OCR, intelligent chunking, schema validation, dead-letter queues) that turns 10K unstructured PDFs into structured contract data using Textract + Claude with 95%+ accuracy.
 
-**How to use this series:** Read the articles in order (each builds on concepts from the previous one), then use the architecture diagrams and cost models as starting points for your own AI pipeline designs. Fork the repo and customize the patterns for your specific cloud environment.
+**What's in the repo:**
+- `articles/` — All 8 articles in this series as markdown, each with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections
+- `README.md` — Series overview with a summary table showing what problem each article solves and the key architecture pattern
+
+**Series reading order:** This is Part 2 of 8. Article 1 introduced AI as a transformation layer. This article tackles unstructured data extraction at scale and introduces dead-letter queues and human review workflows. Next: Article 3 tackles prompt governance and CI/CD for AI systems. Read the full series overview in the [README](https://github.com/jay-jain-10/de-in-ai-series).
