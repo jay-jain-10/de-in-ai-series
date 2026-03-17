@@ -1,6 +1,12 @@
 # The Semantic Data Quality Layer Your Warehouse Is Missing
 ## Why Rule-Based Quality Checks Plateau at 60% and What to Build on Top of It
 
+> **The Problem:** Rule-based quality tools (Great Expectations, dbt tests) plateau at ~60% effectiveness — they catch syntactic errors but miss semantic inconsistencies that domain experts spot instantly. A diagnosis code might be individually valid but paired with an incompatible procedure code.
+>
+> **Who This Is For:** Lead data engineers and data architects building production AI pipelines on AWS/GCP
+>
+> **What You'll Walk Away With:** A two-layer data quality architecture using AI semantic validation and risk-based sampling to catch 95%+ of errors while keeping costs under control.
+
 I watched a healthcare data team debug a data quality issue that consumed three weeks of engineering time. A patient's diagnosis code didn't match their procedure code in approximately three percent of records. To every deterministic validator in the pipeline—Great Expectations, Soda, dbt schema tests, custom SQL assertions—this data looked fine. Both codes were valid ICD-10 codes. Both columns were populated with data. No nulls. No out-of-range values. No schema type mismatches. The data passed one hundred percent of syntactic checks.
 
 But semantically it was broken. You don't perform a total knee replacement on a patient whose primary diagnosis is acute sinusitis. The codes are individually valid. Together they're nonsensical. The data failed the comprehension test. It was syntactically valid but semantically incoherent.
@@ -445,6 +451,14 @@ That's when you need to think like a FinOps engineer. You need to understand uni
 
 ---
 
-**Project code:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+## Code & Resources
+
+**GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+
+**What's in the repo:**
+- `articles/` — All 8 articles in this series as markdown files, including architecture diagrams, cost breakdowns, and trade-off analyses
+- Each article is self-contained with AWS/GCP service recommendations, DE fundamentals sections, and worked examples you can adapt to your own pipelines
+
+**How to use this series:** Read the articles in order (each builds on concepts from the previous one), then use the architecture diagrams and cost models as starting points for your own AI pipeline designs. Fork the repo and customize the patterns for your specific cloud environment.
 
 *Part 6 of "Data Engineering in the Age of AI"*

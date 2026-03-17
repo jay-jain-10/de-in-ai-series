@@ -1,6 +1,12 @@
 # FinOps for AI Pipelines
 ## The Unit Economics That Determine Whether Your AI Pipeline Ships or Gets Killed
 
+> **The Problem:** A pipeline with 98% accuracy costs $47K/month against a $5K budget — the technical problem is solved but unit economics don't work. Cost becomes the constraint that kills projects.
+>
+> **Who This Is For:** Lead data engineers and data architects building production AI pipelines on AWS/GCP
+>
+> **What You'll Walk Away With:** Four cost reduction levers (caching, model tiering, prompt optimization, batching) that compound to 80-90% cost reduction, plus the FinOps framework to make the case to leadership.
+
 Your team built an impressive AI pipeline. It classifies claims documents with ninety-eight percent accuracy. It extracts entities from unstructured PDFs flawlessly. It flags fraud patterns in real-time. The CFO is thrilled. The engineering team is proud. The product team is already planning phase two.
 
 Then the Finance Business Partner asks the question you weren't prepared for: "What's the monthly run cost at production volume?"
@@ -436,6 +442,14 @@ That's when you need to think like a platform architect. When to build versus bu
 
 ---
 
-**Project code:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+## Code & Resources
+
+**GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+
+**What's in the repo:**
+- `articles/` — All 8 articles in this series as markdown files, including architecture diagrams, cost breakdowns, and trade-off analyses
+- Each article is self-contained with AWS/GCP service recommendations, DE fundamentals sections, and worked examples you can adapt to your own pipelines
+
+**How to use this series:** Read the articles in order (each builds on concepts from the previous one), then use the architecture diagrams and cost models as starting points for your own AI pipeline designs. Fork the repo and customize the patterns for your specific cloud environment.
 
 *Part 7 of "Data Engineering in the Age of AI"*

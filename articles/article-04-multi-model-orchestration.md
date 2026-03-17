@@ -2,6 +2,12 @@
 
 **Part 4 of the "Data Engineering in the Age of AI" Series**
 
+> **The Problem:** Single-model approaches don't scale. Different tasks have different accuracy/cost/latency trade-offs. Sentiment needs speed, toxicity needs accuracy, aspects need grounding. Running the same expensive model on all tasks wastes 10x in API costs; using cheap models everywhere sacrifices quality.
+>
+> **Who This Is For:** Lead data engineers and data architects building production AI pipelines on AWS/GCP
+>
+> **What You'll Walk Away With:** Four orchestration patterns (router, chain, fan-out, cascade) that route tasks to different models based on complexity, confidence, and cost—optimizing the cost-latency-accuracy triangle without sacrificing reliability.
+
 Product asks for a feature: analyze product reviews. Sentiment (positive/negative/neutral) for the dashboard. Aspect extraction (which features are mentioned) so users can search by product attribute. Toxicity detection to flag abusive reviews before they go live.
 
 Your first instinct: call Claude once, get three outputs. Simple.
@@ -514,4 +520,12 @@ That's coming in Part 5: Real-Time AI Streams.
 
 ---
 
-**Code and examples**: https://github.com/jay-jain-10/de-in-ai-series
+## Code & Resources
+
+**GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+
+**What's in the repo:**
+- `articles/` — All 8 articles in this series as markdown files, including architecture diagrams, cost breakdowns, and trade-off analyses
+- Each article is self-contained with AWS/GCP service recommendations, DE fundamentals sections, and worked examples you can adapt to your own pipelines
+
+**How to use this series:** Read the articles in order (each builds on concepts from the previous one), then use the architecture diagrams and cost models as starting points for your own AI pipeline designs. Fork the repo and customize the patterns for your specific cloud environment.

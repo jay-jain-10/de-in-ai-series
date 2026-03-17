@@ -2,6 +2,12 @@
 
 **Part 3 of the "Data Engineering in the Age of AI" Series**
 
+> **The Problem:** Prompts are treated as ad-hoc strings instead of versioned, tested production code. Small prompt iterations accumulate silently, drifting pipeline behavior until data quality degrades weeks later—undetected by row counts or schema validation.
+>
+> **Who This Is For:** Lead data engineers and data architects building production AI pipelines on AWS/GCP
+>
+> **What You'll Walk Away With:** A prompt governance system with Git-based versioning, golden dataset testing, CI/CD checks, and production monitoring that detects prompt drift within hours instead of weeks.
+
 It's Tuesday morning. Your data quality dashboard shows a sudden drop in data completeness across six tables. The downstream ML team is panicking. You dig into the DAG logs.
 
 Nothing failed. All jobs ran successfully. Data loaded cleanly. But something is systematically wrong. You trace back to the AI enrichment stage. Someone on the product team updated a prompt Friday afternoon: "Made it more concise," they said. Three days later, you realize: that prompt change silently broke every downstream table because the output schema changed.
@@ -507,4 +513,12 @@ That's Part 4: Designing for Model Heterogeneity.
 
 ---
 
-**Code and examples**: https://github.com/jay-jain-10/de-in-ai-series
+## Code & Resources
+
+**GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+
+**What's in the repo:**
+- `articles/` — All 8 articles in this series as markdown files, including architecture diagrams, cost breakdowns, and trade-off analyses
+- Each article is self-contained with AWS/GCP service recommendations, DE fundamentals sections, and worked examples you can adapt to your own pipelines
+
+**How to use this series:** Read the articles in order (each builds on concepts from the previous one), then use the architecture diagrams and cost models as starting points for your own AI pipeline designs. Fork the repo and customize the patterns for your specific cloud environment.

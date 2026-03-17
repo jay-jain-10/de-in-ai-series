@@ -1,6 +1,12 @@
 # Where AI Meets Event-Driven Architecture
 ## The Latency Budget Problem and Why Streaming + AI Breaks Your Assumptions
 
+> **The Problem:** Streaming architectures assume predictable latency, but AI inference is variable (200ms-2s), destroying backpressure mechanisms and breaking SLA guarantees. Traditional streaming systems fail when you add language model inference to the critical path.
+>
+> **Who This Is For:** Lead data engineers and data architects building production AI pipelines on AWS/GCP
+>
+> **What You'll Walk Away With:** A hybrid streaming + AI architecture that separates the critical path (fast rule-based logic) from enrichment (expensive AI inference), with patterns that survive production load.
+
 I had a conversation last week with an engineering director at a fintech company. They were building account takeover detection into their payment platform. The requirement was simple: detect suspicious activity within thirty seconds. Their Kafka cluster was processing transactions at one thousand events per second with consumer lag under two hundred milliseconds. The infrastructure was bulletproof.
 
 Then they added the AI detection layer, and everything fell apart.
@@ -429,6 +435,14 @@ You've built real-time streams with AI. You've battled latency, cost, and state 
 
 ---
 
-**Project code:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+## Code & Resources
+
+**GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+
+**What's in the repo:**
+- `articles/` — All 8 articles in this series as markdown files, including architecture diagrams, cost breakdowns, and trade-off analyses
+- Each article is self-contained with AWS/GCP service recommendations, DE fundamentals sections, and worked examples you can adapt to your own pipelines
+
+**How to use this series:** Read the articles in order (each builds on concepts from the previous one), then use the architecture diagrams and cost models as starting points for your own AI pipeline designs. Fork the repo and customize the patterns for your specific cloud environment.
 
 *Part 5 of "Data Engineering in the Age of AI"*

@@ -1,6 +1,12 @@
 # From Pipeline to Platform: Building an AI Data Platform Your Whole Org Can Use
 ## The Architectural Leap From One-Off AI Pipeline to Reusable Enterprise Platform
 
+> **The Problem:** Building AI pipelines individually leads to duplication, inconsistency, and wasted engineering effort — five teams build five separate document processing pipelines that could share infrastructure. You need platform thinking, not pipeline thinking.
+>
+> **Who This Is For:** Lead data engineers and data architects building production AI pipelines on AWS/GCP
+>
+> **What You'll Walk Away With:** A platform architecture with an AI gateway, shared infrastructure, and organizational patterns that enable dozens of teams to self-serve without duplicating work.
+
 You're the senior data engineering lead at a mid-sized insurance company. Daily claims: 500-1000, arriving through five channels. Emails with PDF attachments from agents. Image uploads through the portal. Faxes scanned to email. Direct API submissions. Documents submitted through DocuSign integrations. The current process is entirely manual. Claims arrive. A clerk manually reviews. Keys information into the ticket system. An agent is assigned. Three to five days of back-and-forth with claimants for missing information. Manual extraction of structured facts: incident date, claim amount, medical records referenced, witness information. Then a senior processor keys everything into the mainframe, double-checking for accuracy. The entire process takes five to seven days per claim.
 
 Cost: twenty-five FTE claims processors at $60K base salary. Annual: $1.5M. Add benefits (30%), training, overhead, error correction, rework. Total: $2M annually.
@@ -413,6 +419,14 @@ This is data engineering in the age of AI. It's the most interesting time to be 
 
 ---
 
-**Project code:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+## Code & Resources
+
+**GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+
+**What's in the repo:**
+- `articles/` — All 8 articles in this series as markdown files, including architecture diagrams, cost breakdowns, and trade-off analyses
+- Each article is self-contained with AWS/GCP service recommendations, DE fundamentals sections, and worked examples you can adapt to your own pipelines
+
+**How to use this series:** Read the articles in order (each builds on concepts from the previous one), then use the architecture diagrams and cost models as starting points for your own AI pipeline designs. Fork the repo and customize the patterns for your specific cloud environment.
 
 *Part 8 of "Data Engineering in the Age of AI" — Series Conclusion*

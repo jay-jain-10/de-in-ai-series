@@ -2,6 +2,12 @@
 
 **Part 2 of the "Data Engineering in the Age of AI" Series**
 
+> **The Problem:** Traditional OCR and regex extraction fail on unstructured documents with variable formats, context window chaos, and hallucinations. Format explosion, chunking boundaries, and inconsistent document structures cause 30%+ of extractions to be unusable.
+>
+> **Who This Is For:** Lead data engineers and data architects building production AI pipelines on AWS/GCP
+>
+> **What You'll Walk Away With:** A six-stage extraction pipeline (format detection, OCR, intelligent chunking, schema validation, dead-letter queues) that achieves 95%+ accuracy on unstructured documents at scale.
+
 I sat in a legal-tech startup's conference room last year when their VP of Product made the request: "We have 10,000 vendor contracts. They come in as PDFs. We need to extract clauses—payment terms, termination conditions, liability caps—and build a comparison dashboard. How long?"
 
 I made the mistake of saying "two weeks." I was thinking about the API calls, the prompt tuning, maybe some retry logic. I wasn't thinking about what "10,000 PDFs" actually means.
@@ -438,4 +444,12 @@ That's Part 3: Prompt Governance Is the New Schema Governance.
 
 ---
 
-**Code and examples**: https://github.com/jay-jain-10/de-in-ai-series
+## Code & Resources
+
+**GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+
+**What's in the repo:**
+- `articles/` — All 8 articles in this series as markdown files, including architecture diagrams, cost breakdowns, and trade-off analyses
+- Each article is self-contained with AWS/GCP service recommendations, DE fundamentals sections, and worked examples you can adapt to your own pipelines
+
+**How to use this series:** Read the articles in order (each builds on concepts from the previous one), then use the architecture diagrams and cost models as starting points for your own AI pipeline designs. Fork the repo and customize the patterns for your specific cloud environment.

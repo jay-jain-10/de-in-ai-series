@@ -2,6 +2,12 @@
 
 **Part 1 of the "Data Engineering in the Age of AI" Series**
 
+> **The Problem:** Traditional ETL collapses when AI becomes a transformation stage. Non-deterministic outputs, silent failures, and cost variability break the foundational assumptions of pipeline architecture.
+>
+> **Who This Is For:** Lead data engineers and data architects building production AI pipelines on AWS/GCP
+>
+> **What You'll Walk Away With:** A five-stage AI-native pipeline architecture that treats AI as a first-class transformation layer with cost tracking, confidence-based routing, and idempotent processing.
+
 I spent the last decade building data pipelines the old way. Extract from databases and APIs, transform with Spark and dbt, load into warehouses. The data would sit there, well-structured and pristine, waiting for someone to ask a question.
 
 Two years ago, a fintech startup handed me a different problem: 50,000 support tickets landing in S3 every month as raw JSON. They needed sentiment analysis, category classification, and escalation risk scoring flowing into a dashboard *while the tickets were still being ingested*. No batch overnight processing. No separate data science project that would take three months. Now.
@@ -266,4 +272,12 @@ That's Part 2: scaling structured extraction from unstructured documents, where 
 
 ---
 
-**Code and examples**: https://github.com/jay-jain-10/de-in-ai-series
+## Code & Resources
+
+**GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+
+**What's in the repo:**
+- `articles/` — All 8 articles in this series as markdown files, including architecture diagrams, cost breakdowns, and trade-off analyses
+- Each article is self-contained with AWS/GCP service recommendations, DE fundamentals sections, and worked examples you can adapt to your own pipelines
+
+**How to use this series:** Read the articles in order (each builds on concepts from the previous one), then use the architecture diagrams and cost models as starting points for your own AI pipeline designs. Fork the repo and customize the patterns for your specific cloud environment.
