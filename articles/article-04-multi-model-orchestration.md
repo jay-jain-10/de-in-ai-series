@@ -1,12 +1,27 @@
 # Designing for Model Heterogeneity: When One Model Isn't Enough
 
-**Part 4 of the "Data Engineering in the Age of AI" Series**
+*Part 4 of the "Data Engineering in the Age of AI" Series*
 
-> **The Problem:** Single-model approaches don't scale. Different tasks have different accuracy/cost/latency trade-offs. Sentiment needs speed, toxicity needs accuracy, aspects need grounding. Running the same expensive model on all tasks wastes 10x in API costs; using cheap models everywhere sacrifices quality.
->
-> **Who This Is For:** Lead data engineers and data architects building production AI pipelines on AWS/GCP
->
-> **What You'll Walk Away With:** Four orchestration patterns (router, chain, fan-out, cascade) that route tasks to different models based on complexity, confidence, and cost—optimizing the cost-latency-accuracy triangle without sacrificing reliability.
+---
+
+## Problem Statement
+
+Your e-commerce platform processes 100K product reviews daily and needs sentiment analysis, aspect extraction, and toxicity detection. Using a single expensive model on all three tasks costs $200/day in API fees while causing 3–4 second latency per review. Using a single cheap model sacrifices accuracy on safety-critical toxicity detection. A single-model approach leaves 10x cost savings and quality misses on the table.
+
+## What You'll Get From This Article
+
+This article walks through **4 orchestration patterns for multi-model routing** (Router, Chain, Fan-Out/Fan-In, Fallback Cascade). You'll get:
+
+- Four orchestration patterns with latency/cost/accuracy profiles (p50/p95/p99 for each)
+- YAML-based router config for dynamic model selection by task complexity, confidence, or urgency
+- Redis caching layer to eliminate 10–15% duplicate processing ($2K/year savings)
+- Circuit breaker pattern with graceful degradation and fallback routing
+- Per-model cost tracking middleware logging input/output tokens and decision metadata
+- Latency profiles: Router pattern 250ms p50, Cascade pattern best cost, Fan-Out best latency
+- Complete cost breakdown: ~$190/month infrastructure + ~$90/month Claude API for 100K reviews/day
+- Data engineering fundamentals (idempotency with composite keys, cost as metadata, lineage across models)
+
+---
 
 Product asks for a feature: analyze product reviews. Sentiment (positive/negative/neutral) for the dashboard. Aspect extraction (which features are mentioned) so users can search by product attribute. Toxicity detection to flag abusive reviews before they go live.
 
@@ -520,14 +535,12 @@ That's coming in Part 5: Real-Time AI Streams.
 
 ---
 
-## Code & Resources
+## GitHub
 
-**GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+All architecture diagrams, cost models, and the complete 8-part series are available in the repository:
 
-**What this article covers:** Four orchestration patterns (Router, Chain, Fan-Out/Fan-In, Fallback Cascade) for routing tasks to different models based on complexity and cost, processing 100K product reviews/day at ~$190/month.
+**[github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)**
 
-**What's in the repo:**
-- `articles/` — All 8 articles in this series as markdown, each with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections
-- `README.md` — Series overview with a summary table showing what problem each article solves and the key architecture pattern
+The repo contains all 8 articles as markdown with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections. Fork it and adapt the patterns to your own cloud environment.
 
-**Series reading order:** This is Part 4 of 8. Article 3 governed individual prompts. This article orchestrates multiple models in batch. Next: Article 5 brings AI into real-time streaming with latency budgets and hybrid architectures. Read the full series overview in the [README](https://github.com/jay-jain-10/de-in-ai-series).
+*This is Part 4 of 8. Next up → [Part 5: Where AI Meets Event-Driven Architecture](https://github.com/jay-jain-10/de-in-ai-series/blob/main/articles/article-05-realtime-ai-streams.md) — where streaming meets AI inference latency.*

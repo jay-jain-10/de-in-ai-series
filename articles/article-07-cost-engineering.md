@@ -1,11 +1,26 @@
 # FinOps for AI Pipelines
-## The Unit Economics That Determine Whether Your AI Pipeline Ships or Gets Killed
 
-> **The Problem:** A pipeline with 98% accuracy costs $47K/month against a $5K budget — the technical problem is solved but unit economics don't work. Cost becomes the constraint that kills projects.
->
-> **Who This Is For:** Lead data engineers and data architects building production AI pipelines on AWS/GCP
->
-> **What You'll Walk Away With:** Four cost reduction levers (caching, model tiering, prompt optimization, batching) that compound to 80-90% cost reduction, plus the FinOps framework to make the case to leadership.
+*Part 7 of the "Data Engineering in the Age of AI" Series*
+
+---
+
+## Problem Statement
+
+Your AI pipeline works brilliantly — 98% accuracy on claims classification. It extracts entities from unstructured PDFs flawlessly. It flags fraud patterns in real-time. The CFO is thrilled. The engineering team is proud. Then the invoice arrives: $47,000/month. The budget was $5,000. The technical problem is solved but the unit economics don't work. Cost becomes the constraint that kills projects.
+
+## What You'll Get From This Article
+
+This article walks through a **four-step cost reduction framework (caching, model tiering, prompt optimization, batching) reducing costs by 89.5%** for AI pipelines. You'll get:
+
+- 4 compounding cost levers: Caching (40%) → Model Tiering (53%) → Prompt Optimization (25%) → Batching (50%)
+- Cost reduction waterfall showing $150K/month → $15.75K/month at scale
+- When to apply each lever and expected payback periods
+- FinOps infrastructure on AWS (~$300/month) and GCP (~$130/month)
+- Per-record cost attribution and cost SLAs
+- When NOT to optimize guidance (sub-$100/month spend is not worth optimizing)
+- DE fundamentals: cost as metadata, cost SLAs, cost lineage
+
+---
 
 Your team built an impressive AI pipeline. It classifies claims documents with ninety-eight percent accuracy. It extracts entities from unstructured PDFs flawlessly. It flags fraud patterns in real-time. The CFO is thrilled. The engineering team is proud. The product team is already planning phase two.
 
@@ -442,14 +457,12 @@ That's when you need to think like a platform architect. When to build versus bu
 
 ---
 
-## Code & Resources
+## GitHub
 
-**GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+All architecture diagrams, cost models, and the complete 8-part series are available in the repository:
 
-**What this article covers:** Four compounding cost levers (caching, model tiering, prompt optimization, batching) that reduce a $47K/month pipeline to $5K while maintaining quality, with FinOps frameworks for cost governance.
+**[github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)**
 
-**What's in the repo:**
-- `articles/` — All 8 articles in this series as markdown, each with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections
-- `README.md` — Series overview with a summary table showing what problem each article solves and the key architecture pattern
+The repo contains all 8 articles as markdown with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections. Fork it and adapt the patterns to your own cloud environment.
 
-**Series reading order:** This is Part 7 of 8. Article 6 validated data quality. This article optimizes costs using caching, tiering, and batching. Next: Article 8 brings everything together into a shared platform architecture. Read the full series overview in the [README](https://github.com/jay-jain-10/de-in-ai-series).
+*This is Part 7 of 8. Next up → [Part 8: From Pipeline to Platform](https://github.com/jay-jain-10/de-in-ai-series/blob/main/articles/article-08-capstone.md) — where everything comes together.*

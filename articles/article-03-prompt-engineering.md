@@ -1,12 +1,27 @@
 # Prompt Governance Is the New Schema Governance
 
-**Part 3 of the "Data Engineering in the Age of AI" Series**
+*Part 3 of the "Data Engineering in the Age of AI" Series*
 
-> **The Problem:** Prompts are treated as ad-hoc strings instead of versioned, tested production code. Small prompt iterations accumulate silently, drifting pipeline behavior until data quality degrades weeks later—undetected by row counts or schema validation.
->
-> **Who This Is For:** Lead data engineers and data architects building production AI pipelines on AWS/GCP
->
-> **What You'll Walk Away With:** A prompt governance system with Git-based versioning, golden dataset testing, CI/CD checks, and production monitoring that detects prompt drift within hours instead of weeks.
+---
+
+## Problem Statement
+
+Your prompt changes break production pipelines silently. Someone tweaks the classification prompt "to improve accuracy" and suddenly 15% of outputs drift into wrong categories. No version control, no testing, no rollback. Prompts are treated as ad-hoc strings instead of production infrastructure. You spend weeks detecting the drift after dashboards show wrong data, and even longer tracing which prompt change caused it.
+
+## What You'll Get From This Article
+
+This article walks through a **prompt CI/CD pipeline** for treating prompts as versioned production code. You'll get:
+
+- Git-based prompt registry (YAML, versioned, with code review workflow)
+- Golden dataset testing framework (pytest-based, automatic regression detection)
+- Automated CI/CD checks blocking prompt changes that degrade accuracy >5%
+- Production monitoring dashboard (output divergence, confidence degradation, schema compliance, hallucination rate)
+- Rollback capability in <5 minutes by updating a registry pointer
+- Three-team governance model (Data Engineering owns registry, Product/ML owns golden datasets, Analytics owns impact validation)
+- Complete cost breakdown: ~$250-300/month for 15 production prompts across 6 pipelines
+- Data engineering fundamentals (idempotency for prompt changes, exactly-once reprocessing semantics, data contracts for outputs)
+
+---
 
 It's Tuesday morning. Your data quality dashboard shows a sudden drop in data completeness across six tables. The downstream ML team is panicking. You dig into the DAG logs.
 
@@ -513,14 +528,12 @@ That's Part 4: Designing for Model Heterogeneity.
 
 ---
 
-## Code & Resources
+## GitHub
 
-**GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+All architecture diagrams, cost models, and the complete 8-part series are available in the repository:
 
-**What this article covers:** Prompt governance as schema governance — treating prompts as versioned production code with Git-based registries, golden dataset testing, CI/CD checks, and automated rollback for multi-pipeline systems.
+**[github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)**
 
-**What's in the repo:**
-- `articles/` — All 8 articles in this series as markdown, each with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections
-- `README.md` — Series overview with a summary table showing what problem each article solves and the key architecture pattern
+The repo contains all 8 articles as markdown with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections. Fork it and adapt the patterns to your own cloud environment.
 
-**Series reading order:** This is Part 3 of 8. Article 2 showed extraction pipelines that depend on prompts drifting silently. This article tackles prompt governance with versioning and testing. Next: Article 4 tackles multi-model orchestration with Router, Chain, Fan-Out, and Fallback patterns. Read the full series overview in the [README](https://github.com/jay-jain-10/de-in-ai-series).
+*This is Part 3 of 8. Next up → [Part 4: Designing for Model Heterogeneity](https://github.com/jay-jain-10/de-in-ai-series/blob/main/articles/article-04-multi-model-orchestration.md) — where one model isn't enough.*

@@ -1,11 +1,26 @@
 # Where AI Meets Event-Driven Architecture
-## The Latency Budget Problem and Why Streaming + AI Breaks Your Assumptions
 
-> **The Problem:** Streaming architectures assume predictable latency, but AI inference is variable (200ms-2s), destroying backpressure mechanisms and breaking SLA guarantees. Traditional streaming systems fail when you add language model inference to the critical path.
->
-> **Who This Is For:** Lead data engineers and data architects building production AI pipelines on AWS/GCP
->
-> **What You'll Walk Away With:** A hybrid streaming + AI architecture that separates the critical path (fast rule-based logic) from enrichment (expensive AI inference), with patterns that survive production load.
+*Part 5 of the "Data Engineering in the Age of AI" Series*
+
+---
+
+## Problem Statement
+
+Your streaming architecture processes 1000 events/sec with <10ms latency. Then someone adds AI inference to the pipeline — and latency jumps to 200ms-2s per event. Backpressure mechanisms break. SLA guarantees vanish. The fundamental assumption of streaming — predictable, bounded latency — is destroyed by language model inference. Your fraud detection needs sub-second response, but the AI layer doesn't work that way.
+
+## What You'll Get From This Article
+
+This article walks through a **hybrid streaming+AI architecture splitting critical path from async enrichment** for fintech fraud detection. You'll get:
+
+- A two-path architecture pattern: fast rule-based (8ms) + async AI enrichment (0.2-2.2s)
+- Latency budget breakdown showing how variable inference destroys backpressure
+- Backpressure handling patterns for unpredictable AI latency
+- Redis as real-time star schema join for state management
+- 3 distinct SLA tiers (critical path, enrichment, alert) with monitoring
+- Cost breakdown: ~$2,858/month on AWS for 1000 events/sec
+- DE fundamentals: exactly-once semantics, state management, backpressure as quality signal
+
+---
 
 I had a conversation last week with an engineering director at a fintech company. They were building account takeover detection into their payment platform. The requirement was simple: detect suspicious activity within thirty seconds. Their Kafka cluster was processing transactions at one thousand events per second with consumer lag under two hundred milliseconds. The infrastructure was bulletproof.
 
@@ -435,14 +450,12 @@ You've built real-time streams with AI. You've battled latency, cost, and state 
 
 ---
 
-## Code & Resources
+## GitHub
 
-**GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+All architecture diagrams, cost models, and the complete 8-part series are available in the repository:
 
-**What this article covers:** Hybrid streaming + AI architecture that separates critical path (8ms rule-based) from async enrichment (0.2-2.2s AI inference) for fraud detection with 1000 events/second at ~$2,900/month.
+**[github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)**
 
-**What's in the repo:**
-- `articles/` — All 8 articles in this series as markdown, each with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections
-- `README.md` — Series overview with a summary table showing what problem each article solves and the key architecture pattern
+The repo contains all 8 articles as markdown with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections. Fork it and adapt the patterns to your own cloud environment.
 
-**Series reading order:** This is Part 5 of 8. Article 4 orchestrated multiple models in batch. This article brings AI into real-time streaming with hybrid architectures. Next: Article 6 tackles two-layer data quality with semantic validation. Read the full series overview in the [README](https://github.com/jay-jain-10/de-in-ai-series).
+*This is Part 5 of 8. Next up → [Part 6: The Semantic Data Quality Layer Your Warehouse Is Missing](https://github.com/jay-jain-10/de-in-ai-series/blob/main/articles/article-06-ai-data-quality.md) — where rule-based quality plateaus at 60%.*

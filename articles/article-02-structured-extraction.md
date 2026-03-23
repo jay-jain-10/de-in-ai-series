@@ -1,12 +1,26 @@
 # The Unstructured Data Problem at Enterprise Scale: Extracting Structure from Chaos
 
-**Part 2 of the "Data Engineering in the Age of AI" Series**
+*Part 2 of the "Data Engineering in the Age of AI" Series*
 
-> **The Problem:** Traditional OCR and regex extraction fail on unstructured documents with variable formats, context window chaos, and hallucinations. Format explosion, chunking boundaries, and inconsistent document structures cause 30%+ of extractions to be unusable.
->
-> **Who This Is For:** Lead data engineers and data architects building production AI pipelines on AWS/GCP
->
-> **What You'll Walk Away With:** A six-stage extraction pipeline (format detection, OCR, intelligent chunking, schema validation, dead-letter queues) that achieves 95%+ accuracy on unstructured documents at scale.
+---
+
+## Problem Statement
+
+Your legal-tech platform processes 10K vendor contracts monthly as PDFs. Traditional OCR hits 70% accuracy on good days—variable layouts, handwritten signatures, multi-column formats destroy extraction quality. You spend more time fixing extracted data than using it. Your extraction pipeline produces 30% garbage that humans must review, costing you $12.5K/quarter in labor while leaving 70% accuracy headroom.
+
+## What You'll Get From This Article
+
+This article walks through a **6-stage extraction pipeline** for processing unstructured contracts at scale. You'll get:
+
+- A six-stage pipeline architecture (Format Detection → Text Extraction → Chunking → AI Extraction → Validation → Load) with diagram
+- Textract vs Tesseract trade-off ($13-14K vs $1.25K/quarter for 10K contracts, including labor)
+- Intelligent chunking strategy using Haiku to preserve semantic boundaries for context windows
+- Pydantic validation enforcing extraction contracts (schema, confidence, page references)
+- Complete cost breakdown: ~$1,210/quarter including infrastructure, Claude APIs, and human review
+- Dead-letter queue pattern and SLAs for catching 95%+ of extraction failures early
+- Data engineering fundamentals: idempotency via MERGE, schema evolution, DLQ-driven feedback loops
+
+---
 
 I sat in a legal-tech startup's conference room last year when their VP of Product made the request: "We have 10,000 vendor contracts. They come in as PDFs. We need to extract clauses—payment terms, termination conditions, liability caps—and build a comparison dashboard. How long?"
 
@@ -444,14 +458,12 @@ That's Part 3: Prompt Governance Is the New Schema Governance.
 
 ---
 
-## Code & Resources
+## GitHub
 
-**GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+All architecture diagrams, cost models, and the complete 8-part series are available in the repository:
 
-**What this article covers:** A six-stage extraction pipeline (format detection, OCR, intelligent chunking, schema validation, dead-letter queues) that turns 10K unstructured PDFs into structured contract data using Textract + Claude with 95%+ accuracy.
+**[github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)**
 
-**What's in the repo:**
-- `articles/` — All 8 articles in this series as markdown, each with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections
-- `README.md` — Series overview with a summary table showing what problem each article solves and the key architecture pattern
+The repo contains all 8 articles as markdown with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections. Fork it and adapt the patterns to your own cloud environment.
 
-**Series reading order:** This is Part 2 of 8. Article 1 introduced AI as a transformation layer. This article tackles unstructured data extraction at scale and introduces dead-letter queues and human review workflows. Next: Article 3 tackles prompt governance and CI/CD for AI systems. Read the full series overview in the [README](https://github.com/jay-jain-10/de-in-ai-series).
+*This is Part 2 of 8. Next up → [Part 3: Prompt Governance Is the New Schema Governance](https://github.com/jay-jain-10/de-in-ai-series/blob/main/articles/article-03-prompt-engineering.md) — where prompt changes get CI/CD pipelines.*

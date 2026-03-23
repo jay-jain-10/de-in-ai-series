@@ -1,12 +1,26 @@
 # The AI-Native Data Pipeline: Why the Transformation Layer Is Being Rewritten
 
-**Part 1 of the "Data Engineering in the Age of AI" Series**
+*Part 1 of the "Data Engineering in the Age of AI" Series*
 
-> **The Problem:** Traditional ETL collapses when AI becomes a transformation stage. Non-deterministic outputs, silent failures, and cost variability break the foundational assumptions of pipeline architecture.
->
-> **Who This Is For:** Lead data engineers and data architects building production AI pipelines on AWS/GCP
->
-> **What You'll Walk Away With:** A five-stage AI-native pipeline architecture that treats AI as a first-class transformation layer with cost tracking, confidence-based routing, and idempotent processing.
+---
+
+## Problem Statement
+
+Traditional ETL collapses when AI becomes a transformation stage. Your Spark jobs are deterministic — run them twice, get the same result. But call Claude to classify a support ticket, and you get non-deterministic outputs, silent failures (the pipeline completes successfully while 10% of classifications are garbage), and cost that scales with every API call instead of fixed infrastructure. The foundational assumptions of pipeline architecture — idempotency, predictable cost, loud failures — all break. Most teams discover this after they've already shipped to production.
+
+## What You'll Get From This Article
+
+This article walks through a **production five-stage AI-native pipeline** we built for a fintech startup processing 50K support tickets/month. You'll get:
+
+- A complete architecture diagram (S3 → SNS → MWAA → Fargate → Snowflake) with every AWS and GCP service explained
+- The confidence-based routing pattern: Haiku for cheap tasks, Sonnet for critical ones — dropping API cost from $3,000/month to $275/month
+- Silent failure detection using distribution drift against 30-day rolling averages
+- Pydantic schema validation as a data contract between AI and your warehouse
+- Full cost breakdown: **~$325/month** for the entire stack on AWS
+- DE fundamentals applied to AI: idempotency, exactly-once, data contracts, SLAs, lineage, backfill
+- Clear guidance on when NOT to use AI in your pipeline
+
+---
 
 I spent the last decade building data pipelines the old way. Extract from databases and APIs, transform with Spark and dbt, load into warehouses. The data would sit there, well-structured and pristine, waiting for someone to ask a question.
 
@@ -272,14 +286,12 @@ That's Part 2: scaling structured extraction from unstructured documents, where 
 
 ---
 
-## Code & Resources
+## GitHub
 
-**GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+All architecture diagrams, cost models, and the complete 8-part series are available in the repository:
 
-**What this article covers:** Building a five-stage AI-native pipeline that treats AI as a transformation layer, with cost tracking and confidence-based routing for 50K support tickets/month at ~$325/month on AWS/GCP.
+**[github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)**
 
-**What's in the repo:**
-- `articles/` — All 8 articles in this series as markdown, each with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections
-- `README.md` — Series overview with a summary table showing what problem each article solves and the key architecture pattern
+The repo contains all 8 articles as markdown with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections. Fork it and adapt the patterns to your own cloud environment.
 
-**Series reading order:** This is Part 1 of 8. This article introduces AI as a transformation layer and builds the foundational five-stage pipeline. Next: Article 2 tackles document extraction at enterprise scale with six-stage pipelines. Read the full series overview in the [README](https://github.com/jay-jain-10/de-in-ai-series).
+*This is Part 1 of 8. Next up → [Part 2: The Unstructured Data Problem at Enterprise Scale](https://github.com/jay-jain-10/de-in-ai-series/blob/main/articles/article-02-structured-extraction.md) — where we build a 6-stage extraction pipeline for 10K legal contracts.*

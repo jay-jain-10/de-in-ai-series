@@ -1,11 +1,25 @@
 # From Pipeline to Platform: Building an AI Data Platform Your Whole Org Can Use
-## The Architectural Leap From One-Off AI Pipeline to Reusable Enterprise Platform
 
-> **The Problem:** Building AI pipelines individually leads to duplication, inconsistency, and wasted engineering effort — five teams build five separate document processing pipelines that could share infrastructure. You need platform thinking, not pipeline thinking.
->
-> **Who This Is For:** Lead data engineers and data architects building production AI pipelines on AWS/GCP
->
-> **What You'll Walk Away With:** A platform architecture with an AI gateway, shared infrastructure, and organizational patterns that enable dozens of teams to self-serve without duplicating work.
+*Part 8 of the "Data Engineering in the Age of AI" Series*
+
+---
+
+## Problem Statement
+
+Your company has 4 teams building 4 separate AI pipelines — fraud detection, document classification, claims processing, customer support. Each team built their own prompt management, their own caching, their own monitoring. You have duplication, inconsistency, and wasted engineering effort. The next pipeline takes as long as the first because nothing is reusable.
+
+## What You'll Get From This Article
+
+This article walks through a **complete platform architecture unifying scattered pipelines into a self-service platform** for insurance claims and beyond. You'll get:
+
+- Complete platform architecture: AI Gateway + 7 shared services
+- Comprehensive diagram: 5 ingestion sources → Kafka → Processing → AI Gateway → Validation → Orchestration → Warehouse → Observability
+- Platform adoption timeline: 2 weeks to first pipeline, self-service by month 6
+- Organizational patterns: platform team (3-4 people) vs embedded team engineers (domain logic)
+- Cost model: ~$2,000-5,000/month for full infrastructure at scale
+- DE fundamentals at platform scale: idempotency across components, data contracts across teams, end-to-end lineage
+
+---
 
 You're the senior data engineering lead at a mid-sized insurance company. Daily claims: 500-1000, arriving through five channels. Emails with PDF attachments from agents. Image uploads through the portal. Faxes scanned to email. Direct API submissions. Documents submitted through DocuSign integrations. The current process is entirely manual. Claims arrive. A clerk manually reviews. Keys information into the ticket system. An agent is assigned. Three to five days of back-and-forth with claimants for missing information. Manual extraction of structured facts: incident date, claim amount, medical records referenced, witness information. Then a senior processor keys everything into the mainframe, double-checking for accuracy. The entire process takes five to seven days per claim.
 
@@ -419,14 +433,12 @@ This is data engineering in the age of AI. It's the most interesting time to be 
 
 ---
 
-## Code & Resources
+## GitHub
 
-**GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+All architecture diagrams, cost models, and the complete 8-part series are available in the repository:
 
-**What this article covers:** Building an AI data platform for insurance claims with AI Gateway, shared services, and organizational patterns to move from scattered pipelines to a self-service platform used by multiple teams.
+**[github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)**
 
-**What's in the repo:**
-- `articles/` — All 8 articles in this series as markdown, each with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections
-- `README.md` — Series overview with a summary table showing what problem each article solves and the key architecture pattern
+The repo contains all 8 articles as markdown with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections. Fork it and adapt the patterns to your own cloud environment.
 
-**Series reading order:** This is Part 8 of 8 (capstone). Articles 1-7 built individual pipeline patterns (transformation, extraction, governance, orchestration, streaming, quality, costs). This article unifies them into a reusable enterprise platform. Read the full series overview in the [README](https://github.com/jay-jain-10/de-in-ai-series).
+*This is Part 8 of 8 — the capstone. Start from the beginning → [Part 1: The AI-Native Data Pipeline](https://github.com/jay-jain-10/de-in-ai-series/blob/main/articles/article-01-ai-native-pipeline.md)*

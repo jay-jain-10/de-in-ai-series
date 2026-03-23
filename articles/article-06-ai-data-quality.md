@@ -1,11 +1,25 @@
 # The Semantic Data Quality Layer Your Warehouse Is Missing
-## Why Rule-Based Quality Checks Plateau at 60% and What to Build on Top of It
 
-> **The Problem:** Rule-based quality tools (Great Expectations, dbt tests) plateau at ~60% effectiveness — they catch syntactic errors but miss semantic inconsistencies that domain experts spot instantly. A diagnosis code might be individually valid but paired with an incompatible procedure code.
->
-> **Who This Is For:** Lead data engineers and data architects building production AI pipelines on AWS/GCP
->
-> **What You'll Walk Away With:** A two-layer data quality architecture using AI semantic validation and risk-based sampling to catch 95%+ of errors while keeping costs under control.
+*Part 6 of the "Data Engineering in the Age of AI" Series*
+
+---
+
+## Problem Statement
+
+Great Expectations catches format errors and null checks — the easy 60%. But your healthcare pipeline just loaded 3% of records where diagnosis codes don't match procedure codes, medication dosages are physiologically impossible, and temporal sequences are logically backwards. Syntactic validation passed. Semantic validation doesn't exist. Your warehouse has confident-looking garbage.
+
+## What You'll Get From This Article
+
+This article walks through a **two-layer validation architecture (syntactic rules + semantic AI sampling) with human feedback loop** for healthcare data. You'll get:
+
+- Two-layer validation: syntactic 100% rule-based → semantic AI-sampled with human feedback
+- Risk-based sampling strategy (100% for safety-critical, 20% for medium, 3% for low)
+- Precision/recall calibration protocol (monthly 200-sample review, Cohen's kappa >0.7)
+- Quarantine table as audit log tracking validation decisions
+- Cost breakdown: ~$1,700-2,000/month on AWS for 10M daily records
+- DE fundamentals: data contracts for quality layers, quality as dimension table, schema evolution for rules
+
+---
 
 I watched a healthcare data team debug a data quality issue that consumed three weeks of engineering time. A patient's diagnosis code didn't match their procedure code in approximately three percent of records. To every deterministic validator in the pipeline—Great Expectations, Soda, dbt schema tests, custom SQL assertions—this data looked fine. Both codes were valid ICD-10 codes. Both columns were populated with data. No nulls. No out-of-range values. No schema type mismatches. The data passed one hundred percent of syntactic checks.
 
@@ -451,14 +465,12 @@ That's when you need to think like a FinOps engineer. You need to understand uni
 
 ---
 
-## Code & Resources
+## GitHub
 
-**GitHub Repository:** [github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)
+All architecture diagrams, cost models, and the complete 8-part series are available in the repository:
 
-**What this article covers:** Two-layer data quality (syntactic rules + semantic AI sampling) that catches 95%+ of errors for healthcare data, with human feedback loops that improve extraction over time.
+**[github.com/jay-jain-10/de-in-ai-series](https://github.com/jay-jain-10/de-in-ai-series)**
 
-**What's in the repo:**
-- `articles/` — All 8 articles in this series as markdown, each with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections
-- `README.md` — Series overview with a summary table showing what problem each article solves and the key architecture pattern
+The repo contains all 8 articles as markdown with architecture diagrams, AWS/GCP cost breakdowns, trade-off analyses, and DE fundamentals sections. Fork it and adapt the patterns to your own cloud environment.
 
-**Series reading order:** This is Part 6 of 8. Article 5 brought AI into streaming. This article adds semantic validation on top of rule-based checks. Next: Article 7 tackles cost engineering and FinOps for AI systems. Read the full series overview in the [README](https://github.com/jay-jain-10/de-in-ai-series).
+*This is Part 6 of 8. Next up → [Part 7: FinOps for AI Pipelines](https://github.com/jay-jain-10/de-in-ai-series/blob/main/articles/article-07-cost-engineering.md) — where you learn to cut 89.5% of your AI costs.*
