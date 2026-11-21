@@ -1,0 +1,92 @@
+{
+  "Comment": "Invoice processing pipeline",
+  "StartAt": "ExtractText",
+  "States": {
+    "ExtractText": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:123456789:function:extract-text",
+      "Parameters": {
+        "bucket.$": "$.detail.bucket.name",
+        "key.$": "$.detail.object.key"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": ["TooManyRequestsException", "ThrottlingException"],
+          "IntervalSeconds": 5,
+          "MaxAttempts": 3,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "HandleExtractionFailure"
+        }
+      ],
+      "Next": "ClassifyDocument"
+    },
+    "ClassifyDocument": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:123456789:function:classify-doc",
+      "Retry": [
+        {
+          "ErrorEquals": ["ThrottlingException"],
+          "IntervalSeconds": 3,
+          "MaxAttempts": 3,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Next": "IsInvoice"
+    },
+    "IsInvoice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.document_type",
+          "StringEquals": "invoice",
+          "Next": "ExtractInvoiceData"
+        }
+      ],
+      "Default": "SkipNonInvoice"
+    },
+    "ExtractInvoiceData": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:123456789:function:extract-invoice",
+      "Retry": [
+        {
+          "ErrorEquals": ["ThrottlingException", "ModelTimeoutException"],
+          "IntervalSeconds": 5,
+          "MaxAttempts": 3,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "HandleExtractionFailure"
+        }
+      ],
+      "Next": "ValidateAndStore"
+    },
+    "ValidateAndStore": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:123456789:function:validate-store",
+      "Next": "Done"
+    },
+    "SkipNonInvoice": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:123456789:function:log-skipped",
+      "Comment": "Log non-invoice documents for audit trail",
+      "Next": "Done"
+    },
+    "HandleExtractionFailure": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:123456789:function:handle-failure",
+      "Comment": "Move to dead letter queue, alert team",
+      "Next": "Done"
+    },
+    "Done": {
+      "Type": "Succeed"
+    }
+  }
+}

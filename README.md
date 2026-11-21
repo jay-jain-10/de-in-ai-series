@@ -56,6 +56,12 @@ Each article is a **self-contained architectural reference** containing:
 
 ---
 
+## Bonus: Runnable AWS Project
+
+[`aws-invoice-pipeline/`](./aws-invoice-pipeline/) contains the working code for the 3-part series "AI + Data Engineering on AWS": an invoice-processing pipeline on S3, Textract, Bedrock (Claude), Step Functions and DynamoDB, with the cost, monitoring and tradeoff story.
+
+---
+
 ## Who This Is For
 
 **Lead data engineers and data architects** (5-10+ YOE) building production AI pipelines on AWS or GCP. You already know Airflow, dbt, Snowflake, and Spark. You need the architectural patterns for when AI becomes a first-class component in your data platform — not a side project.

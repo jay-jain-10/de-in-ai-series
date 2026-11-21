@@ -1,0 +1,11 @@
+{
+  "ProcessBatch": {
+    "Type": "Map",
+    "MaxConcurrency": 20,
+    "ItemsPath": "$.invoices",
+    "Iterator": {
+      "StartAt": "ExtractText",
+      "States": { "...same states as before..." }
+    }
+  }
+}

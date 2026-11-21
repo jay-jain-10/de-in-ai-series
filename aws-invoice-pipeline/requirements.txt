@@ -1,0 +1,5 @@
+boto3>=1.34
+pydantic>=2.5
+pandas>=2.0
+pyarrow>=14
+s3fs>=2023.12
