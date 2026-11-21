@@ -38,3 +38,6 @@ dbt_modules/
 *.parquet
 *.jsonl
 data/
+
+# Test caches
+.pytest_cache/

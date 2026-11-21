@@ -1,0 +1,52 @@
+version: 2
+
+sources:
+  - name: quality
+    database: "{{ env_var('SNOWFLAKE_DATABASE', 'ANALYTICS') }}"
+    schema: QUALITY
+    tables:
+      - name: quarantine_record
+        description: "Audit log of every Layer 1 / Layer 2 flag; grain (record_id, check_id)"
+        columns:
+          - name: quarantine_id
+            tests: [not_null, unique]
+          - name: flagged_by_layer
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ['L1', 'L2']
+          - name: reviewer_decision
+            tests:
+              - accepted_values:
+                  values: ['fix_upstream', 'accept_as_is', 'confirm_error']
+      - name: source_volume
+        description: "Row counts per source (one row per ingested record)"
+      - name: source_config
+        description: "business_criticality and consequence_severity (1-5) per source"
+      - name: fact_claims
+        description: "Claims fact table that dim_quality joins to"
+
+models:
+  - name: stg_quarantine_records
+    columns:
+      - name: quarantine_id
+        tests: [not_null, unique]
+      - name: is_pending_review
+        description: "True until a human decision is recorded"
+      - name: breaches_review_sla
+        description: "True if pending more than 48 hours"
+  - name: dim_quality
+    description: "Quality dimension, one row per record_id"
+    columns:
+      - name: record_id
+        tests: [not_null, unique]
+      - name: flagged_by_layer
+        tests:
+          - accepted_values:
+              values: ['L1', 'L2']
+  - name: source_risk_score
+    columns:
+      - name: risk_tier
+        tests:
+          - accepted_values:
+              values: ['high', 'medium', 'low']

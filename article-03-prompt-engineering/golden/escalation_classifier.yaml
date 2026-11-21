@@ -1,0 +1,32 @@
+test_cases:
+  - name: clear_escalation_urgent
+    input: "App crashed and I lost $50K. This is unacceptable. Call me NOW."
+    expected_approx: {escalation_risk: [0.95, 0.10]}
+    expected: {urgency: critical}
+    min_confidence: 0.9
+
+  - name: ambiguous_issue
+    input: "The app seems slower today. Not sure if it's my phone or the app."
+    expected_approx: {escalation_risk: [0.45, 0.20]}
+    expected: {urgency: low}
+    acceptable_confidence_range: [0.3, 0.6]
+
+  - name: regression_old_format
+    input: "Account locked. Password reset not working. I'm locked out 24 hours now."
+    expected_approx: {escalation_risk: [0.98, 0.10]}
+    note: "This case failed in v0.9; v1.0 must catch it"
+
+  - name: legal_threat
+    input: "If this isn't fixed today I'm reporting you to the regulator and calling my lawyer."
+    expected_approx: {escalation_risk: [0.95, 0.10]}
+    expected: {urgency: critical}
+
+  - name: routine_question
+    input: "How do I change my statement date?"
+    expected_approx: {escalation_risk: [0.05, 0.15]}
+    expected: {urgency: low}
+
+  - name: positive_feedback
+    input: "Just wanted to say thanks, your team was great."
+    expected_approx: {escalation_risk: [0.02, 0.10]}
+    expected: {urgency: low}

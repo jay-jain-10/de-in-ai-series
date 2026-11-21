@@ -34,9 +34,9 @@ def pre_filter(event, context):
 def choose_extraction_model(textract_confidence: float, page_count: int) -> str:
     """Pick the right model based on document complexity."""
     if textract_confidence > 0.90 and page_count == 1:
-        return "anthropic.claude-3-haiku-20240307-v1:0"
+        return "us.anthropic.claude-haiku-4-5-20251001-v1:0"
     else:
-        return "anthropic.claude-3-5-sonnet-20241022-v2:0"
+        return "us.anthropic.claude-sonnet-4-6"
 
 
 

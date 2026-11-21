@@ -1,0 +1,87 @@
+# Prompt registry. Git is the source of truth; CI publishes to S3.
+# Rules:
+#   * Published versions are immutable. Add a new version, never edit one.
+#   * Rollback = change `active_version` (the pointer).
+sentiment_classifier:
+  active_version: '1.3'
+  history:
+  - {version: '1.2', activated_at: '2026-08-01T09:00:00+00:00', reason: initial release}
+  - {version: '1.3', activated_at: '2026-09-01T09:00:00+00:00', reason: fix neutrality detection}
+  versions:
+    '1.2':
+      model: claude-haiku-4-5-20251001
+      contract: SentimentOutput
+      max_tokens: 200
+      changelog: Initial release
+      system_prompt: |
+        You are a customer support sentiment analyzer. Classify sentiment as positive, neutral, negative, or frustrated.
+        Return JSON with sentiment field (one of: positive, neutral, negative, frustrated) and confidence (0.0-1.0).
+      validation_schema: &sentiment_schema
+        type: object
+        properties:
+          sentiment: {type: string, enum: [positive, neutral, negative, frustrated]}
+          confidence: {type: number, minimum: 0, maximum: 1}
+          subsentiment: {type: string, enum: [angry, disappointed]}
+        required: [sentiment, confidence]
+    '1.3':
+      model: claude-haiku-4-5-20251001
+      contract: SentimentOutput
+      max_tokens: 200
+      changelog: Clarify neutrality detection; short factual or lukewarm text is neutral
+      system_prompt: |
+        You are a customer support sentiment analyzer. Classify sentiment as positive, neutral, negative, or frustrated.
+        Short, factual or lukewarm statements ("it's fine") are neutral. Anger, repeated failures or data loss are frustrated.
+        Return ONLY JSON with sentiment field (one of: positive, neutral, negative, frustrated) and confidence (0.0-1.0).
+      validation_schema: *sentiment_schema
+
+escalation_classifier:
+  active_version: '2.1'
+  history:
+  - {version: '2.0', activated_at: '2026-07-01T09:00:00+00:00', reason: initial release}
+  - {version: '2.1', activated_at: '2026-09-15T09:00:00+00:00', reason: add urgency level}
+  versions:
+    '2.0':
+      model: claude-sonnet-5-5
+      contract: EscalationOutput
+      changelog: Initial release
+      system_prompt: |
+        You are an escalation risk evaluator for a fintech support desk.
+        Return ONLY JSON with escalation_risk (0.0-1.0), urgency (low, medium, high, critical) and confidence (0.0-1.0).
+      validation_schema: &escalation_schema
+        type: object
+        properties:
+          escalation_risk: {type: number, minimum: 0, maximum: 1}
+          urgency: {type: string, enum: [low, medium, high, critical]}
+          confidence: {type: number, minimum: 0, maximum: 1}
+        required: [escalation_risk, urgency, confidence]
+    '2.1':
+      model: claude-sonnet-5-5
+      contract: EscalationOutput
+      changelog: Define escalation explicitly (legal, regulatory, lockouts > 24h) to stop drift in what "escalation" means
+      system_prompt: |
+        You are an escalation risk evaluator for a fintech support desk.
+        Escalation means: legal or regulatory threats, financial loss, or lockouts longer than 24 hours.
+        Routine slowness or questions are NOT escalations.
+        Return ONLY JSON with escalation_risk (0.0-1.0), urgency (low, medium, high, critical) and confidence (0.0-1.0).
+      validation_schema: *escalation_schema
+
+vendor_extractor:
+  active_version: '1.0'
+  history:
+  - {version: '1.0', activated_at: '2026-08-15T09:00:00+00:00', reason: initial release}
+  versions:
+    '1.0':
+      model: claude-haiku-4-5-20251001
+      contract: VendorExtraction
+      changelog: Initial release
+      system_prompt: |
+        Extract vendor name, payment terms, and currency. Return JSON with fields vendor_name, terms_days, currency, confidence.
+        vendor_name must be copied verbatim from the text. currency is an ISO 4217 code.
+      validation_schema:
+        type: object
+        properties:
+          vendor_name: {type: string}
+          terms_days: {type: integer, minimum: 0}
+          currency: {type: string}
+          confidence: {type: number, minimum: 0, maximum: 1}
+        required: [vendor_name, terms_days, currency, confidence]

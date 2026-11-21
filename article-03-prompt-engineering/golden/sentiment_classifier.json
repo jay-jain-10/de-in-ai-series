@@ -1,0 +1,12 @@
+{"test_cases": [
+  {"name": "app_crash_data_loss", "input": "Your app crashed and lost my data", "expected": {"sentiment": "frustrated"}, "min_confidence": 0.8},
+  {"name": "great_product", "input": "Great product, love using it", "expected": {"sentiment": "positive"}, "min_confidence": 0.8},
+  {"name": "its_fine", "input": "It's fine", "expected": {"sentiment": "neutral"}, "min_confidence": 0.6},
+  {"name": "slow_refund", "input": "Still no refund after 3 weeks. Very disappointing service.", "expected": {"sentiment": "negative"}, "min_confidence": 0.7},
+  {"name": "repeated_lockout", "input": "I have reset my password 4 times and I am STILL locked out!!!", "expected": {"sentiment": "frustrated"}, "min_confidence": 0.8},
+  {"name": "thanks_quick_help", "input": "Thanks for the quick help, issue resolved in 5 minutes.", "expected": {"sentiment": "positive"}, "min_confidence": 0.8},
+  {"name": "plain_question", "input": "What are your support hours on weekends?", "expected": {"sentiment": "neutral"}, "min_confidence": 0.6},
+  {"name": "special_chars", "input": "Ünïcode ✓ — résumé upload failed; \"quotes\" & <tags>", "expected": {"sentiment": "negative"}, "min_confidence": 0.5, "note": "edge case: special characters"},
+  {"name": "regression_v12_neutral", "input": "ok", "expected": {"sentiment": "neutral"}, "min_confidence": 0.5, "note": "failed in 1.2; 1.3 must keep it neutral"},
+  {"name": "ambiguous_mixed", "input": "Love the design but the checkout keeps failing.", "expected": {}, "acceptable_confidence_range": [0.3, 0.8], "note": "ambiguous: low confidence acceptable"}
+]}

@@ -19,16 +19,19 @@ Each article tackles a real scenario — fintech ticket classification, legal do
 ```
 de-in-ai-series/
 ├── README.md                                    ← You are here
-└── articles/
-    ├── article-01-ai-native-pipeline.md         ← AI as a transformation layer (fintech, 50K tickets)
-    ├── article-02-structured-extraction.md      ← Document intelligence at scale (legal-tech, 10K contracts)
-    ├── article-03-prompt-engineering.md          ← Prompt governance as schema governance (CI/CD for prompts)
-    ├── article-04-multi-model-orchestration.md   ← Router, chain, fan-out, fallback patterns (e-commerce reviews)
-    ├── article-05-realtime-ai-streams.md        ← Streaming + AI latency budgets (fraud detection)
-    ├── article-06-ai-data-quality.md            ← Semantic quality layer (healthcare validation)
-    ├── article-07-cost-engineering.md           ← FinOps for AI pipelines (89.5% cost reduction)
-    └── article-08-capstone.md                   ← Platform architecture (insurance claims automation)
+├── articles/                                    ← the 8 articles (markdown)
+├── article-01-ai-native-pipeline/               ← code: Airflow DAG, classifier, Snowflake loader, dbt
+├── article-02-structured-extraction/            ← code: 6-stage contract extraction (112 offline tests)
+├── article-03-prompt-engineering/               ← code: prompt registry, golden-set CI gate, rollback (97 tests)
+├── article-04-multi-model-orchestration/        ← code: router/chain/fan-out/cascade, breaker, cache (124 tests)
+├── article-05-realtime-ai-streams/              ← code: hybrid streaming + async AI enrichment (67 tests)
+├── article-06-ai-data-quality/                  ← code: two-layer quality, sampling, calibration (96 tests)
+├── article-07-cost-engineering/                 ← code: cost tracking + the four levers + waterfall (52 tests)
+├── article-08-capstone/                         ← code: AI Gateway + platform reference (152 tests)
+└── aws-invoice-pipeline/                        ← bonus: AWS-only 3-part series (Textract + Bedrock)
 ```
+
+Every code folder has its own README, `requirements.txt` and `.env.example`. Tests run fully offline with mocked Anthropic/AWS/Snowflake/Kafka/Redis; each README states exactly what has **not** been run against live services.
 
 Each article is a **self-contained architectural reference** containing:
 

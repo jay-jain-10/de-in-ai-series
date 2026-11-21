@@ -1,0 +1,142 @@
+{
+  "Comment": "Contract extraction pipeline (Article 2). Lambda for light stages, Fargate for long extraction jobs, S3 quarantine as DLQ.",
+  "StartAt": "DetectFormat",
+  "States": {
+    "DetectFormat": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {"FunctionName": "${DetectFormatFunctionArn}", "Payload.$": "$"},
+      "ResultSelector": {"Payload.$": "$.Payload"},
+      "ResultPath": "$.detect",
+      "OutputPath": "$.detect.Payload",
+      "Retry": [{"ErrorEquals": ["Lambda.ServiceException", "Lambda.TooManyRequestsException"],
+                 "IntervalSeconds": 2, "MaxAttempts": 3, "BackoffRate": 2.0}],
+      "Catch": [{"ErrorEquals": ["States.ALL"], "ResultPath": "$.error", "Next": "SendToDLQ"}],
+      "Next": "RouteByDocType"
+    },
+    "RouteByDocType": {
+      "Type": "Choice",
+      "Choices": [
+        {"Variable": "$.doc_type", "StringEquals": "digital", "Next": "ExtractDigitalText"},
+        {"Variable": "$.doc_type", "StringEquals": "scanned", "Next": "StartTextract"},
+        {"Variable": "$.doc_type", "StringEquals": "hybrid", "Next": "ExtractHybridText"}
+      ],
+      "Default": "SendToDLQ"
+    },
+    "ExtractDigitalText": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {"FunctionName": "${ExtractTextFunctionArn}", "Payload.$": "$"},
+      "ResultPath": "$.text",
+      "Catch": [{"ErrorEquals": ["States.ALL"], "ResultPath": "$.error", "Next": "SendToDLQ"}],
+      "Next": "SelectExtractionRuntime"
+    },
+    "StartTextract": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::aws-sdk:textract:startDocumentAnalysis",
+      "Parameters": {
+        "DocumentLocation": {"S3Object": {"Bucket.$": "$.bucket", "Name.$": "$.key"}},
+        "FeatureTypes": ["TABLES"]
+      },
+      "ResultPath": "$.textract",
+      "Retry": [{"ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 5, "MaxAttempts": 2, "BackoffRate": 2.0}],
+      "Catch": [{"ErrorEquals": ["States.ALL"], "ResultPath": "$.error", "Next": "ExtractWithTesseractFallback"}],
+      "Next": "WaitForTextract"
+    },
+    "WaitForTextract": {"Type": "Wait", "Seconds": 30, "Next": "ExtractScannedText"},
+    "ExtractScannedText": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {"FunctionName": "${ExtractTextFunctionArn}", "Payload.$": "$"},
+      "ResultPath": "$.text",
+      "Catch": [{"ErrorEquals": ["States.ALL"], "ResultPath": "$.error", "Next": "ExtractWithTesseractFallback"}],
+      "Next": "SelectExtractionRuntime"
+    },
+    "ExtractHybridText": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {"FunctionName": "${ExtractTextFunctionArn}", "Payload.$": "$"},
+      "ResultPath": "$.text",
+      "Catch": [{"ErrorEquals": ["States.ALL"], "ResultPath": "$.error", "Next": "ExtractWithTesseractFallback"}],
+      "Next": "SelectExtractionRuntime"
+    },
+    "ExtractWithTesseractFallback": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {"FunctionName": "${TesseractFunctionArn}", "Payload.$": "$"},
+      "ResultPath": "$.text",
+      "Catch": [{"ErrorEquals": ["States.ALL"], "ResultPath": "$.error", "Next": "SendToDLQ"}],
+      "Next": "SelectExtractionRuntime"
+    },
+    "SelectExtractionRuntime": {
+      "Type": "Choice",
+      "Choices": [{"Variable": "$.use_fargate", "BooleanEquals": true, "Next": "ChunkAndExtractFargate"}],
+      "Default": "ChunkAndExtractLambda"
+    },
+    "ChunkAndExtractLambda": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {"FunctionName": "${ChunkExtractFunctionArn}", "Payload.$": "$"},
+      "ResultPath": "$.extraction",
+      "TimeoutSeconds": 900,
+      "Retry": [{"ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 5, "MaxAttempts": 2, "BackoffRate": 2.0}],
+      "Catch": [{"ErrorEquals": ["States.ALL"], "ResultPath": "$.error", "Next": "SendToDLQ"}],
+      "Next": "Validate"
+    },
+    "ChunkAndExtractFargate": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::ecs:runTask.sync",
+      "Parameters": {
+        "LaunchType": "FARGATE",
+        "Cluster": "${EcsClusterArn}",
+        "TaskDefinition": "${ExtractionTaskDefinitionArn}",
+        "NetworkConfiguration": {"AwsvpcConfiguration": {"Subnets": ["${SubnetId}"], "AssignPublicIp": "DISABLED"}},
+        "Overrides": {"ContainerOverrides": [{
+          "Name": "extractor",
+          "Environment": [
+            {"Name": "CONTRACT_ID", "Value.$": "$.contract_id"},
+            {"Name": "S3_KEY", "Value.$": "$.key"}
+          ]
+        }]}
+      },
+      "ResultPath": "$.extraction",
+      "TimeoutSeconds": 3600,
+      "Retry": [{"ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 30, "MaxAttempts": 2, "BackoffRate": 2.0}],
+      "Catch": [{"ErrorEquals": ["States.ALL"], "ResultPath": "$.error", "Next": "SendToDLQ"}],
+      "Next": "Validate"
+    },
+    "Validate": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {"FunctionName": "${ValidateFunctionArn}", "Payload.$": "$"},
+      "ResultSelector": {"route.$": "$.Payload.route", "Payload.$": "$.Payload"},
+      "ResultPath": "$.validation",
+      "Retry": [{"ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 2, "MaxAttempts": 3, "BackoffRate": 2.0}],
+      "Catch": [{"ErrorEquals": ["States.ALL"], "ResultPath": "$.error", "Next": "SendToDLQ"}],
+      "Next": "RouteByConfidence"
+    },
+    "RouteByConfidence": {
+      "Type": "Choice",
+      "Choices": [
+        {"Variable": "$.validation.route", "StringEquals": "dlq", "Next": "SendToDLQ"},
+        {"Variable": "$.validation.route", "StringEquals": "quarantine", "Next": "LoadToSnowflake"}
+      ],
+      "Default": "LoadToSnowflake"
+    },
+    "LoadToSnowflake": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {"FunctionName": "${LoadFunctionArn}", "Payload.$": "$"},
+      "ResultPath": "$.load",
+      "Retry": [{"ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 10, "MaxAttempts": 3, "BackoffRate": 2.0}],
+      "Catch": [{"ErrorEquals": ["States.ALL"], "ResultPath": "$.error", "Next": "SendToDLQ"}],
+      "End": true
+    },
+    "SendToDLQ": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {"FunctionName": "${DeadLetterFunctionArn}", "Payload.$": "$"},
+      "End": true
+    }
+  }
+}

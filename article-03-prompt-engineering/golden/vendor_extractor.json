@@ -1,0 +1,6 @@
+{"test_cases": [
+  {"name": "net30_usd", "input": "Invoice from Acme Industrial Supply. Terms: Net 30, payable in USD.", "expected": {"vendor_name": "Acme Industrial Supply", "terms_days": 30, "currency": "USD"}, "min_confidence": 0.8},
+  {"name": "net45_eur", "input": "Globex GmbH invoice. Payment due within 45 days. Amounts in EUR.", "expected": {"vendor_name": "Globex GmbH", "terms_days": 45, "currency": "EUR"}, "min_confidence": 0.8},
+  {"name": "net60_gbp", "input": "Initech Ltd - Net 60 - GBP", "expected": {"vendor_name": "Initech Ltd", "terms_days": 60, "currency": "GBP"}, "min_confidence": 0.7},
+  {"name": "due_on_receipt", "input": "Umbrella Corp. Due on receipt. USD.", "expected": {"vendor_name": "Umbrella Corp", "terms_days": 0, "currency": "USD"}, "min_confidence": 0.7}
+]}

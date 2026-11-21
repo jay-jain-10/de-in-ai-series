@@ -1,0 +1,14 @@
+anthropic>=2,<3
+fastapi>=0.110.0
+uvicorn>=0.29.0
+httpx>=0.27.0
+pydantic>=2.5.0
+pyyaml>=6.0
+python-dotenv>=1.0.0
+# Live-service adapters (only imported by your own deployment code; tests mock them)
+boto3>=1.34.0
+redis>=5.0.0
+confluent-kafka>=2.3.0
+snowflake-connector-python>=3.6.0
+# Tests
+pytest>=8.0.0

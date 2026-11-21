@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: RAW
+    tables:
+      - name: extracted_contracts
+
+models:
+  - name: stg_extracted_contracts
+    columns:
+      - name: contract_id
+        tests: [not_null]
+      - name: extraction_version
+        tests: [not_null]
+      - name: routing
+        tests:
+          - accepted_values:
+              values: ['production', 'production_flagged', 'quarantine']

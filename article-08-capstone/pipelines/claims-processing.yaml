@@ -1,0 +1,51 @@
+# Self-service onboarding: insurance claims pipeline (the platform's design partner).
+name: claims-processing
+team: claims
+domain: claims
+schema_version: v1
+owner: claims-data-eng@example.com
+description: Extract structured facts from claim documents and route clean claims to the mainframe.
+expected_daily_documents: 1000          # 500-1000 claims/day
+
+extraction:
+  task_type: extract_claim_facts
+  fields:
+    claimant_name:    {type: string,  required: true,  description: Full name of the claimant}
+    policy_number:    {type: string,  required: true,  pattern: '^POL-\d{6}$', description: Policy number like POL-123456}
+    incident_date:    {type: date,    required: true,  description: Date of the incident (YYYY-MM-DD)}
+    claim_amount:     {type: number,  required: true,  min: 0, max: 1000000, description: Total claimed amount in USD}
+    procedure_code:   {type: string,  required: false, description: 5-digit medical procedure code}
+    diagnosis_code:   {type: string,  required: false, description: Diagnosis code}
+    medical_records_referenced: {type: list, required: false, description: Medical records referenced}
+    witnesses:        {type: list,    required: false, description: Witness names}
+
+risk:
+  task_type: classify_risk
+  categories: [low, medium, high]
+
+scoring:
+  task_type: score_fraud
+  logic: "Score 0-1 likelihood of fraud: unusually high amount, invalid codes, inconsistent dates, vague descriptions."
+  complexity: low
+
+validation:
+  min_confidence: 0.7
+  layer1_rules:
+    - claims.amount_logic
+    - claims.procedure_code_valid
+    - claims.incident_not_future
+    - claims.policy_exists
+  layer2:
+    sample_rate: 0.1
+    always_sample_risks: [high]
+    rules:
+      - The procedure must be plausible for the stated diagnosis.
+      - The claim amount must be plausible for the described incident.
+      - The record must not contradict itself (dates, names, amounts).
+
+routing:
+  handler: mainframe
+  target: claims.mainframe
+
+warehouse:
+  table: extracted_claims

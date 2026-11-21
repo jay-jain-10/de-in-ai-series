@@ -1,0 +1,8 @@
+anthropic>=2,<3
+redis>=5.0.0
+boto3>=1.34.0
+dagster>=1.8.0
+pydantic>=2.5.0
+python-dotenv>=1.0.0
+PyYAML>=6.0
+pytest>=8.0.0

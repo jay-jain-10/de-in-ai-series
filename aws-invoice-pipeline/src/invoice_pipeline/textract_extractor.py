@@ -10,9 +10,10 @@ textract = boto3.client("textract", region_name="us-east-1")
 def extract_text_from_pdf(bucket: str, key: str) -> dict:
     """
     Extract text and tables from a PDF using Textract.
-    PDFs always go through the async API (StartDocumentAnalysis) —
-    the sync AnalyzeDocument API only supports images and single-page
-    PDFs passed as raw bytes, not S3 references.
+    Always uses the async API (StartDocumentAnalysis) so single- and multi-page
+    PDFs share one code path. Note: synchronous AnalyzeDocument also accepts
+    single-page PDFs (<=10 MB) from S3 and returns faster; use it if your
+    invoices are single-page and latency matters.
     """
     return _extract_async(bucket, key)
 

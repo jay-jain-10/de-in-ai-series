@@ -1,0 +1,84 @@
+# Model routing config (Article 4). Orchestration decisions live here, not in code.
+
+models:
+  haiku:
+    model_id: claude-haiku-4-5-20251001
+    input_per_mtok: 1.00      # USD per 1M input tokens (same pricing as Article 1)
+    output_per_mtok: 5.00
+  sonnet:
+    model_id: claude-sonnet-5-5
+    input_per_mtok: 3.00
+    output_per_mtok: 15.00
+  opus:
+    model_id: claude-opus-5-5
+    input_per_mtok: 15.00
+    output_per_mtok: 75.00
+  haiku_with_rag:             # Haiku + retrieval-augmented generation
+    base: haiku
+    rag: true
+  sonnet_with_rag:
+    base: sonnet
+    rag: true
+
+tasks:
+  sentiment:
+    router: complexity_score          # complexity decides Haiku vs Sonnet
+    default_model: haiku
+    fallback_model: sonnet
+    complexity_threshold: 0.6
+    timeout_s: 1                      # per-call timeout
+    retries: 2                        # retry on timeout
+    max_concurrency: 1000
+  aspect_extraction:
+    router: embedding_similarity      # vector similarity decides RAG model tier
+    default_model: haiku_with_rag
+    fallback_model: sonnet_with_rag
+    embedding_threshold: 0.8
+    timeout_s: 3
+    retries: 1
+    max_concurrency: 100              # resource-limited
+  toxicity_detection:
+    router: keyword_urgency           # urgent safety keywords escalate to Opus
+    default_model: haiku
+    fallback_model: opus
+    safety_keywords: [kill, threat, suicide, self-harm, bomb, hate, racist, slur, harass, abuse, rape]
+    timeout_s: 5
+    retries: 1
+    max_concurrency: 50               # safety-critical, slow
+  aggregation:
+    timeout_s: 2
+    retries: 3                        # stitches results together, must succeed
+    max_concurrency: 1000
+
+patterns:
+  router:                             # Pattern 1
+    simple_model: haiku
+    complex_model: sonnet
+    simple_max_words: 100
+    complex_min_words: 300
+    complex_keywords: [lawsuit, lawyer, sue, discrimination, discriminatory, explicit, fraud]
+  chain:                              # Pattern 2
+    sentiment_model: haiku
+    aspect_model: sonnet_with_rag
+    toxicity_model: opus
+  fan_out:                            # Pattern 3
+    sentiment: haiku
+    aspect_extraction: sonnet_with_rag
+    toxicity_detection: opus
+  cascade:                            # Pattern 4
+    task: aspect_extraction
+    models: [haiku_with_rag, sonnet_with_rag]
+    confidence_threshold: 0.7
+
+circuit_breaker:
+  failure_threshold: 5                # open after 5 consecutive failures
+  recovery_timeout_s: 60              # test recovery every 60 seconds
+  ramp_steps: [0.01, 0.10, 0.50, 1.0] # gradual ramp back to 100%
+  retry_after_s: 3600                 # queue fallback reviews for retry after 1 hour
+  fallback_rate_alert: 0.05
+
+cache:
+  ttl_seconds: 2592000                # 30 days
+  min_hit_rate: 0.05                  # investigate below 5%
+
+human_review_confidence: 0.7          # toxicity confidence below this -> needs_human_review

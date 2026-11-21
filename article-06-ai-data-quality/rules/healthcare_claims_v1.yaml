@@ -1,0 +1,71 @@
+# Versioned quality rule set. Deploy via PR review + CI/CD (treat as code).
+source: "healthcare_claims"
+version: "1.0.0"
+domain: "healthcare"
+criticality: "safety_critical"
+
+layer_1_rules:
+  - rule_id: "claim_id_not_null"
+    check: "NOT NULL"
+    column: "claim_id"
+    severity: "critical"
+  - rule_id: "claim_id_unique"
+    check: "UNIQUE"
+    column: "claim_id"
+    severity: "critical"
+  - rule_id: "patient_id_not_null"
+    check: "NOT NULL"
+    column: "patient_id"
+    severity: "critical"
+  - rule_id: "patient_id_exists"
+    check: "REFERENCES patients.patient_id"
+    column: "patient_id"
+    severity: "high"
+  - rule_id: "claim_amount_range"
+    check: "BETWEEN 0 AND 1000000"
+    column: "claim_amount"
+    severity: "high"
+  - rule_id: "claim_date_valid"
+    check: "DATE NOT FUTURE"
+    column: "claim_date"
+    severity: "high"
+  - rule_id: "diagnosis_code_format"
+    check: "REGEX ^[A-TV-Z][0-9][0-9AB](\\.[0-9A-TV-Z]{1,4})?$"
+    column: "diagnosis_code"
+    severity: "high"
+  - rule_id: "procedure_code_format"
+    check: "REGEX ^[0-9]{5}$"
+    column: "procedure_code"
+    severity: "high"
+  - rule_id: "dosage_numeric_range"
+    check: "BETWEEN 0 AND 100000"
+    column: "dosage_mg"
+    severity: "medium"
+    allow_null: true
+
+layer_2:
+  confidence_threshold: 0.60
+  examples_min: 3
+  examples_max: 5
+
+layer_2_examples:
+  - description: "diagnosis doesn't match procedure"
+    example: {diagnosis_code: "J01.90", diagnosis: "acute sinusitis", procedure_code: "27447", procedure: "total knee replacement"}
+    is_consistent: false
+    anomaly_type: "diagnosis_procedure_mismatch"
+  - description: "valid diagnosis-procedure pair"
+    example: {diagnosis_code: "M17.11", diagnosis: "knee osteoarthritis", procedure_code: "27447", procedure: "total knee replacement"}
+    is_consistent: true
+    anomaly_type: "none"
+  - description: "physiologically impossible dosage"
+    example: {diagnosis_code: "I10", diagnosis: "essential hypertension", medication: "lisinopril", dosage_mg: 4000, patient_age: 54}
+    is_consistent: false
+    anomaly_type: "impossible_dosage"
+  - description: "temporal sequence backwards"
+    example: {admit_date: "2026-03-10", discharge_date: "2026-03-02", procedure: "appendectomy"}
+    is_consistent: false
+    anomaly_type: "temporal_inconsistency"
+  - description: "plausible record"
+    example: {diagnosis_code: "K35.80", diagnosis: "acute appendicitis", procedure_code: "44970", procedure: "laparoscopic appendectomy", admit_date: "2026-03-02", discharge_date: "2026-03-04"}
+    is_consistent: true
+    anomaly_type: "none"

@@ -1,0 +1,30 @@
+# Second pipeline: shows platform generalization (different fields, no claims rules).
+name: compliance-contracts
+team: compliance
+domain: compliance
+schema_version: v1
+description: Extract key terms from vendor agreements.
+expected_daily_documents: 50
+
+extraction:
+  task_type: extract_contract_terms
+  fields:
+    vendor_name:     {type: string, required: true, description: Vendor legal name}
+    effective_date:  {type: date,   required: true, description: Effective date (YYYY-MM-DD)}
+    term_months:     {type: integer, required: true, min: 1, max: 120, description: Contract term in months}
+    auto_renews:     {type: boolean, required: false, description: Whether the contract auto-renews}
+
+risk:
+  categories: [standard, nonstandard]
+
+validation:
+  layer2:
+    sample_rate: 0.2
+    rules:
+      - Term length and dates must be consistent.
+
+routing:
+  handler: workflow_engine
+
+warehouse:
+  table: extracted_claims

@@ -75,7 +75,7 @@ def classify_document(text: str) -> dict:
     credit note, PO, or something else?
     """
     response = bedrock.invoke_model(
-        modelId="anthropic.claude-3-haiku-20240307-v1:0",
+        modelId="us.anthropic.claude-haiku-4-5-20251001-v1:0",
         contentType="application/json",
         accept="application/json",
         body=json.dumps({
@@ -120,7 +120,7 @@ def extract_invoice_data(
     forms_str = "\n".join(f"{k}: {v}" for k, v in forms.items())
 
     response = bedrock.invoke_model(
-        modelId="anthropic.claude-3-5-sonnet-20241022-v2:0",
+        modelId="us.anthropic.claude-sonnet-4-6",
         contentType="application/json",
         accept="application/json",
         body=json.dumps({

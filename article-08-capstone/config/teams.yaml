@@ -1,0 +1,22 @@
+# Team registry for the AI Gateway. API keys are read from env vars (never committed).
+teams:
+  - team: claims
+    api_key_env: CLAIMS_TEAM_API_KEY
+    daily_quota: 5000          # claims processing team: 5000 calls/day
+    priority: 1                # 1 = highest
+    monthly_budget_usd: 15000
+  - team: compliance
+    api_key_env: COMPLIANCE_TEAM_API_KEY
+    daily_quota: 1000
+    priority: 2
+    monthly_budget_usd: 3000
+  - team: customer_success
+    api_key_env: CUSTOMER_SUCCESS_API_KEY
+    daily_quota: 2000
+    priority: 2
+    monthly_budget_usd: 6000
+  - team: data
+    api_key_env: DATA_TEAM_API_KEY
+    daily_quota: 1000
+    priority: 3
+    monthly_budget_usd: 3000

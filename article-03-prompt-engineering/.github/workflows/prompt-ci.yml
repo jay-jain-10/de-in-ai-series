@@ -1,0 +1,105 @@
+name: prompt-ci
+
+on:
+  pull_request:
+    paths: ["prompts/**", "golden/**", "src/**", "tests/**"]
+  push:
+    branches: [main]
+    paths: ["prompts/**", "golden/**"]
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: "Publish registry to S3 (release)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write   # tagging on merge
+  id-token: write   # OIDC to AWS for the release job
+
+jobs:
+  test:
+    name: unit tests + static registry checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11", cache: pip }
+      - run: pip install -r requirements.txt
+      - run: pytest -q
+
+  golden-gate:
+    name: golden dataset gate (blocks merge on >5% failures or >0.05 confidence drop)
+    needs: test
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11", cache: pip }
+      - run: pip install -r requirements.txt
+      - name: Fetch base-branch registry
+        run: git show origin/${{ github.base_ref }}:prompts/registry.yaml > base_registry.yaml
+      - name: Run gate (live Claude calls)
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python -m src.ci_gate --base-registry base_registry.yaml --report gate_report.json
+      - name: Run gate (static only, forked PRs have no secrets)
+        if: github.event.pull_request.head.repo.full_name != github.repository
+        run: python -m src.ci_gate --base-registry base_registry.yaml --static-only --report gate_report.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: gate-report, path: gate_report.json }
+
+  tag:
+    name: tag released prompt versions
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install -r requirements.txt
+      - name: Tag <prompt>-v<version> for each active version
+        run: |
+          python - <<'PY' > tags.txt
+          from src.prompt_registry import PromptRegistry, release_tag
+          r = PromptRegistry.from_file("prompts/registry.yaml")
+          for n, v in r.pin().items():
+              print(release_tag(n, v))
+          PY
+          while read -r tag; do
+            git rev-parse -q --verify "refs/tags/$tag" >/dev/null || { git tag "$tag" && git push origin "$tag"; }
+          done < tags.txt
+
+  deploy:
+    name: deploy registry to S3 (manual release)
+    if: github.event_name == 'workflow_dispatch' && inputs.deploy
+    needs: test
+    runs-on: ubuntu-latest
+    environment: production   # requires approval
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install -r requirements.txt
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: us-east-1
+      - name: Publish registry (MWAA reads it at the start of each run)
+        env:
+          PROMPT_REGISTRY_BUCKET: ${{ vars.PROMPT_REGISTRY_BUCKET }}
+        run: |
+          python - <<'PY'
+          import os
+          from src.prompt_registry import PromptRegistry, S3RegistryStore
+          r = PromptRegistry.from_file("prompts/registry.yaml")
+          assert not r.validate()
+          print("VersionId:", S3RegistryStore(os.environ["PROMPT_REGISTRY_BUCKET"]).publish(r))
+          PY
